@@ -1,4 +1,5 @@
-classes_jeden.py.py - выполненное домашнее задание
+classes_jeden.py - выполненное домашнее задание
+
 test_funcs.py - тесты на pytest
 
 
