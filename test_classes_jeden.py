@@ -21,6 +21,11 @@ def test_mappeddict_two_points():
     assert md.location.address == "город Москва, Лесная, 7"
 
 
+def test_mappeddict_dict():
+    md = classes_jeden.MappedDict(json.loads(lesson))
+    assert md.location.address == "город Москва, Лесная, 7"
+
+
 @pytest.mark.skip(reason="implement __setitem__")
 def test_mappeddict_changing_as_dict():
     md = classes_jeden.MappedDict(lesson)
@@ -48,7 +53,6 @@ def test_advert_price_lower_than_0():
 
 def test_advert_price_nonexistent():
     ad = classes_jeden.Advert(only_title)
-    price = ad.price
     assert 0 == ad.price
 
 
