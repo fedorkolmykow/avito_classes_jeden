@@ -7,3 +7,4 @@ collected 9 items
 
 test_classes_jeden.py .ss......                                                                                                                                                       [100%]
 ```
+![Скриншот перекрашивания шрифта](./colorized.png)
