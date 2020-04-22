@@ -5,16 +5,23 @@ class ColorizeMixin:
     repr_color_code = 32     # green
     _escape_code = '\033'
     style = 1                # normal style
-    back_color = 40          # white background
-    @property
-    def color(self):
-        return f'{self._escape_code}[{self.style};{self.repr_color_code};{self.back_color}m'
+    back_color = 40          # black background
+    default_color = f'{_escape_code}[0m'
+    color = f'{_escape_code}[{style};{repr_color_code};{back_color}m'
+
+    @staticmethod
+    def colorize(wrapped_func):
+        def wrapper(*args, **kwargs):
+            self = args[0]
+            return self.color + wrapped_func(*args, **kwargs) + self.default_color
+        return wrapper
 
 
 class MappedDict(dict):
-    def __init__(self, json_obj):
-        decoded_json = json.loads(json_obj)
-        super().__init__(decoded_json)
+    def __init__(self, data):
+        if not isinstance(data, dict):
+            data = json.loads(data)
+        super().__init__(data)
         for item in self:
             if isinstance(self[item], dict):
                 self[item] = MappedDict(json.dumps(self[item]))
@@ -43,8 +50,9 @@ class Advert(ColorizeMixin):
             raise ValueError('must be >= 0')
         self._price = new_price
 
+    @ColorizeMixin.colorize
     def __repr__(self):
-        return f"{self.color}{self.title} | {self.price} ₽"
+        return f"{self.title} | {self.price} ₽"
 
 
 if __name__ == "__main__":
@@ -56,5 +64,6 @@ if __name__ == "__main__":
         "metro_stations": ["Белорусская"]
         }
     }""")
+    print()
     print(lesson_ad)
-
+    print()
