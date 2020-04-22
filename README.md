@@ -1,6 +1,5 @@
-funcs.py - выполненное домашнее задание
+classes_jeden.py.py - выполненное домашнее задание
 test_funcs.py - тесты на pytest
-MyIteration.py - классы поддерживающие интерфейс Iterable
 
 
 Домашнее задание от Авито.
