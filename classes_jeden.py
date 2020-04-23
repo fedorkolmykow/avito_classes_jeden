@@ -1,6 +1,14 @@
 import json
 
 
+def colorize(color, back_color, style):
+    def _colorize(wrapped_func):
+        def wrapper(*args, **kwargs):
+            return f'\033[{style};{color};{back_color}m' + wrapped_func(*args, **kwargs) + '\033[0m'
+        return wrapper
+    return _colorize
+
+
 class ColorizeMixin:
     repr_color_code = 32     # green
     _escape_code = '\033'
@@ -9,12 +17,8 @@ class ColorizeMixin:
     default_color = f'{_escape_code}[0m'
     color = f'{_escape_code}[{style};{repr_color_code};{back_color}m'
 
-    @staticmethod
-    def colorize(wrapped_func):
-        def wrapper(*args, **kwargs):
-            self = args[0]
-            return self.color + wrapped_func(*args, **kwargs) + self.default_color
-        return wrapper
+    def __repr__(self):
+        return self.color + super().__repr__() + self.default_color
 
 
 class MappedDict(dict):
@@ -25,11 +29,10 @@ class MappedDict(dict):
         for item in self:
             if isinstance(self[item], dict):
                 self[item] = MappedDict(json.dumps(self[item]))
-            __dict__ = super().__getattribute__('__dict__')
-            __dict__[item] = self[item]
+            self.__dict__[item] = self[item]
 
 
-class Advert(ColorizeMixin):
+class BaseAdvert:
     def __init__(self, mapping):
         md = MappedDict(mapping)
         if 'title' not in md:
@@ -50,13 +53,17 @@ class Advert(ColorizeMixin):
             raise ValueError('must be >= 0')
         self._price = new_price
 
-    @ColorizeMixin.colorize
+    #@colorize(32, 40, 1)
     def __repr__(self):
         return f"{self.title} | {self.price} ₽"
 
 
+class Advert(ColorizeMixin, BaseAdvert):
+    pass
+
+
 if __name__ == "__main__":
-    lesson_ad = Advert( """{
+    lesson_ad = Advert("""{
     "title": "python",
     "price": 3,
     "location": {
