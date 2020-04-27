@@ -4,18 +4,26 @@ import json
 def colorize(color, back_color, style):
     def _colorize(wrapped_func):
         def wrapper(*args, **kwargs):
-            return f'\033[{style};{color};{back_color}m' + wrapped_func(*args, **kwargs) + '\033[0m'
+            code = '\033['
+            default_color = f'{code}0m'
+            return f'{code}{style};{color};{back_color}m' + wrapped_func(*args, **kwargs) + f'{default_color}'
         return wrapper
     return _colorize
 
 
 class ColorizeMixin:
-    repr_color_code = 32     # green
+    repr_color_code = 33     # green
     _escape_code = '\033'
     style = 1                # normal style
     back_color = 40          # black background
-    default_color = f'{_escape_code}[0m'
-    color = f'{_escape_code}[{style};{repr_color_code};{back_color}m'
+
+    @property
+    def default_color(self):
+        return f'{self._escape_code}[0m'
+
+    @property
+    def color(self):
+        return f'{self._escape_code}[{self.style};{self.repr_color_code};{self.back_color}m'
 
     def __repr__(self):
         return self.color + super().__repr__() + self.default_color

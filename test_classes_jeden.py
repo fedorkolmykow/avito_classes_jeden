@@ -15,6 +15,11 @@ only_title = """{
     "title": "python"  
     }"""
 
+class_field = """{
+    "title": "python"  
+    "class": "Advert"  
+    }"""
+
 
 def test_mappeddict_two_points():
     md = classes_jeden.MappedDict(lesson)
@@ -71,4 +76,8 @@ def test_advert_price_nonexistent_title():
     with pytest.raises(AttributeError):
         ad = classes_jeden.Advert('''{}''')
 
-
+'''
+def test_mappeddict_field_class():
+    md = classes_jeden.MappedDict(class_field)
+    assert md.class == "Advert"
+'''
