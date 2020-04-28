@@ -1,4 +1,5 @@
 import json
+import keyword
 
 
 def colorize(color, back_color, style):
@@ -34,10 +35,25 @@ class MappedDict(dict):
         if not isinstance(data, dict):
             data = json.loads(data)
         super().__init__(data)
+
+        print(self.__dict__)
+        keywords = [x for x in self if x in keyword.kwlist]
+        if keywords:
+            raise KeyError("Python's key word as attribute")
+
         for item in self:
             if isinstance(self[item], dict):
                 self[item] = MappedDict(json.dumps(self[item]))
             self.__dict__[item] = self[item]
+
+    def __getattribute__(self, item):
+        try:
+            val = super().__getattribute__(item)
+        except AttributeError:
+            val = None
+            __dict__ = super().__getattribute__('__dict__')
+            __dict__[item] = val
+        return val
 
 
 class BaseAdvert:

@@ -16,9 +16,12 @@ only_title = """{
     }"""
 
 class_field = """{
-    "title": "python"  
-    "class": "Advert"  
+    "title": "python",
+    "class": "Advert",
+    "boo": "Tr"  
     }"""
+
+class_field_dict = {"class": "Advert", "title": "python"}
 
 
 def test_mappeddict_two_points():
@@ -76,8 +79,7 @@ def test_advert_price_nonexistent_title():
     with pytest.raises(AttributeError):
         ad = classes_jeden.Advert('''{}''')
 
-'''
+
 def test_mappeddict_field_class():
-    md = classes_jeden.MappedDict(class_field)
-    assert md.class == "Advert"
-'''
+    with pytest.raises(KeyError):
+        md = classes_jeden.MappedDict(class_field)
